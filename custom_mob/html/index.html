@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Telecom Authority</title>
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for beautiful icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app" class="pta-wrapper">
+        <div class="pta-container">
+            <!-- Header Section -->
+            <header class="pta-header">
+                <div class="header-logo">
+                    <i class="fa-solid fa-tower-cell logo-icon"></i>
+                    <div>
+                        <h1>Premium Telecom Authority</h1>
+                        <p class="subtitle">Admin Control Panel</p>
+                    </div>
+                </div>
+                <button class="close-btn" id="close-panel-btn">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </header>
+
+            <!-- Main Layout: Sidebar & Content -->
+            <div class="pta-layout">
+                <!-- Navigation Sidebar -->
+                <aside class="pta-sidebar">
+                    <nav class="nav-menu">
+                        <button class="nav-item active" data-tab="online-players">
+                            <i class="fa-solid fa-users"></i>
+                            <span>Online Players</span>
+                        </button>
+                        <button class="nav-item" data-tab="assign-number">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span>Assign Custom</span>
+                        </button>
+                        <button class="nav-item" data-tab="active-premium">
+                            <i class="fa-solid fa-address-book"></i>
+                            <span>Active Premium</span>
+                        </button>
+                    </nav>
+                    <div class="sidebar-footer">
+                        <span class="status-indicator-dot"></span>
+                        <span class="status-text">Server Sync Connected</span>
+                    </div>
+                </aside>
+
+                <!-- Dynamic Content Area -->
+                <main class="pta-content">
+                    <!-- Notification Banner -->
+                    <div id="toast-notification" class="toast-banner hidden">
+                        <i id="toast-icon" class="fa-solid fa-circle-check"></i>
+                        <span id="toast-message">Action completed successfully.</span>
+                    </div>
+
+                    <!-- TAB 1: Online Players -->
+                    <section id="online-players" class="tab-pane active">
+                        <div class="section-header">
+                            <h2>Online Player List</h2>
+                            <div class="search-box">
+                                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                                <input type="text" id="search-online" placeholder="Search by name, ID, or citizen ID...">
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table class="pta-table">
+                               <thead>
+                                   <tr>
+                                       <th style="width: 80px;">Server ID</th>
+                                       <th>Name</th>
+                                       <th>Citizen ID</th>
+                                       <th>Current Phone</th>
+                                       <th>Status</th>
+                                       <th style="text-align: right; width: 220px;">Actions</th>
+                                   </tr>
+                               </thead>
+                               <tbody id="online-players-list">
+                                   <!-- Filled by JS -->
+                               </tbody>
+                            </table>
+                            <div class="empty-state hidden" id="online-empty">
+                                <i class="fa-solid fa-users-slash"></i>
+                                <p>No online players found matching your query.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- TAB 2: Assign Custom Number -->
+                    <section id="assign-number" class="tab-pane">
+                        <div class="section-header">
+                            <h2>Assign Custom Phone Number</h2>
+                        </div>
+                        <div class="form-container">
+                            <form id="assign-form" class="pta-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="assign-target">Player Identifier <span class="required">*</span></label>
+                                        <div class="input-with-icon">
+                                            <i class="fa-solid fa-user"></i>
+                                            <input type="text" id="assign-target" placeholder="Enter Server ID or Citizen ID" required autocomplete="off">
+                                        </div>
+                                        <small class="help-text">Can be the online player's Server ID (e.g. 5) or character Citizen ID (e.g. ABC12345).</small>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="assign-phone">Custom Phone Number <span class="required">*</span></label>
+                                        <div class="input-with-icon">
+                                            <i class="fa-solid fa-phone"></i>
+                                            <input type="text" id="assign-phone" placeholder="e.g. 111111 or 1111" maxlength="6" required autocomplete="off">
+                                        </div>
+                                        <small class="help-text">Enter the exact phone number to assign (Max 6 digits). The system will run a duplicate check before saving.</small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="assign-expiry">Expiry Duration (Days) <span class="required">*</span></label>
+                                        <div class="input-with-icon">
+                                            <i class="fa-solid fa-calendar-days"></i>
+                                            <input type="number" id="assign-expiry" placeholder="30" min="1" max="3650" value="30" required autocomplete="off">
+                                        </div>
+                                        <small class="help-text">The number of days until this premium phone number automatically expires and reverts.</small>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn btn-secondary" id="reset-form-btn">
+                                        <i class="fa-solid fa-rotate-left"></i> Reset
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa-solid fa-circle-check"></i> Assign Premium Number
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+
+                    <!-- TAB 3: Active Premium Numbers -->
+                    <section id="active-premium" class="tab-pane">
+                        <div class="section-header">
+                            <h2>Active Premium Database</h2>
+                            <div class="search-box">
+                                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                                <input type="text" id="search-premium" placeholder="Search by citizen ID or custom number...">
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table class="pta-table">
+                               <thead>
+                                   <tr>
+                                       <th>Name</th>
+                                       <th>Citizen ID</th>
+                                       <th>Custom Phone</th>
+                                       <th>Original Phone</th>
+                                       <th>Expiry Date</th>
+                                       <th style="text-align: right; width: 140px;">Actions</th>
+                                   </tr>
+                               </thead>
+                               <tbody id="premium-numbers-list">
+                                   <!-- Filled by JS -->
+                               </tbody>
+                            </table>
+                            <div class="empty-state hidden" id="premium-empty">
+                                <i class="fa-solid fa-address-book"></i>
+                                <p>No active premium phone numbers found.</p>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
